@@ -30,15 +30,41 @@
 </header>
 
 <nav class="filters" id="filters">
-  <button class="chip active" data-filter="todos">Todos</button>
-  <button class="chip" data-filter="programado">Próximos</button>
-  <button class="chip" data-filter="finalizado">Jugados</button>
+  <button class="chip active" data-filter="proximos">Próximos y en vivo</button>
+  <button class="chip" data-filter="jugados">Jugados</button>
   <button class="chip" data-filter="favoritos">⭐ Favoritos</button>
 </nav>
 
 <main>
   <p id="status" class="status">Cargando partidos...</p>
-  <section id="matchList" class="match-list"></section>
+
+  <section id="liveSection" class="live-section" hidden>
+    <h2 class="section-title live-title">🔴 En vivo</h2>
+    <div id="liveList" class="match-list"></div>
+  </section>
+
+  <section id="clasicoSection" class="clasico-section" hidden>
+    <h2 class="section-title clasico-title">⚔️ Próximo Clásico vs Boca</h2>
+    <div id="clasicoList" class="match-list"></div>
+  </section>
+
+  <section class="category-section" id="ligaSection">
+    <h2 class="section-title">🇦🇷 Liga Argentina</h2>
+    <div id="ligaList" class="match-list"></div>
+    <p class="empty-msg" data-empty-for="liga" hidden>No hay partidos en este filtro.</p>
+  </section>
+
+  <section class="category-section" id="sudamericaSection">
+    <h2 class="section-title">🌎 Copa Sudamericana</h2>
+    <div id="sudamericaList" class="match-list"></div>
+    <p class="empty-msg" data-empty-for="sudamericana" hidden>No hay partidos en este filtro.</p>
+  </section>
+
+  <section class="category-section" id="favoritosSection" hidden>
+    <h2 class="section-title">⭐ Favoritos</h2>
+    <div id="favoritosList" class="match-list"></div>
+    <p class="empty-msg" data-empty-for="favoritos" hidden>Todavía no marcaste partidos como favoritos.</p>
+  </section>
 </main>
 
 <footer class="footer">
@@ -54,9 +80,10 @@
     </div>
     <div class="teams">
       <span class="team home"></span>
-      <span class="vs">vs</span>
+      <span class="vs score">vs</span>
       <span class="team away"></span>
     </div>
+    <div class="live-minute" hidden></div>
     <div class="details">
       <div class="detail"><span class="label">📅 Fecha</span><span class="date"></span></div>
       <div class="detail"><span class="label">🕒 Hora</span><span class="time"></span></div>

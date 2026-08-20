@@ -1,4 +1,4 @@
-const CACHE_NAME = "river-partidos-v1";
+const CACHE_NAME = "river-partidos-v3";
 const ASSETS = [
   "./",
   "./index.html",

@@ -2,43 +2,68 @@
    River Plate - Partidos
    app.js
    - Consume data.json como si fuera una API (fetch)
+   - Agrupa los partidos por categoría: Liga Argentina / Copa Sudamericana
+   - Muestra una sección de "En vivo" con marcador y minuto
+   - Se actualiza sola cada 30s para reflejar resultados en vivo
    - Guarda favoritos del usuario en localStorage (persistencia)
-   - Filtra partidos (todos / próximos / jugados / favoritos)
    - Registra el service worker y habilita "Instalar app"
    ========================================================= */
 
 const API_URL = "data.json"; // Reemplazar por una URL remota si se aloja la API en otro servidor
 const STORAGE_KEY = "river_favoritos";
+const REFRESH_MS = 30000; // cada cuánto se revisan resultados en vivo
+
+const CATEGORIAS = {
+  liga_argentina: { titulo: "Liga Argentina", icono: "🇦🇷" },
+  sudamericana: { titulo: "Copa Sudamericana", icono: "🌎" }
+};
 
 const state = {
   partidos: [],
-  filtro: "todos",
+  filtro: "proximos", // proximos | jugados | favoritos
   favoritos: cargarFavoritos()
 };
 
 const els = {
   status: document.getElementById("status"),
-  list: document.getElementById("matchList"),
   filters: document.getElementById("filters"),
   updatedDate: document.getElementById("updatedDate"),
   template: document.getElementById("matchTemplate"),
-  installBtn: document.getElementById("installBtn")
+  installBtn: document.getElementById("installBtn"),
+
+  liveSection: document.getElementById("liveSection"),
+  liveList: document.getElementById("liveList"),
+
+  clasicoSection: document.getElementById("clasicoSection"),
+  clasicoList: document.getElementById("clasicoList"),
+
+  ligaSection: document.getElementById("ligaSection"),
+  ligaList: document.getElementById("ligaList"),
+
+  sudamericaSection: document.getElementById("sudamericaSection"),
+  sudamericaList: document.getElementById("sudamericaList"),
+
+  favoritosSection: document.getElementById("favoritosSection"),
+  favoritosList: document.getElementById("favoritosList")
 };
 
 init();
 
 async function init() {
-  cargarPartidos();
+  await cargarPartidos();
   configurarFiltros();
   configurarServiceWorker();
   configurarInstalacion();
+
+  // Actualización automática de resultados en vivo, sin recargar la página
+  setInterval(cargarPartidos, REFRESH_MS);
 }
 
 /* ---------- Datos (API) ---------- */
 
 async function cargarPartidos() {
   try {
-    const res = await fetch(API_URL, { cache: "no-store" });
+    const res = await fetch(`${API_URL}?t=${Date.now()}`, { cache: "no-store" });
     if (!res.ok) throw new Error("No se pudo obtener la información");
     const data = await res.json();
 
@@ -48,8 +73,11 @@ async function cargarPartidos() {
     render();
   } catch (err) {
     console.error(err);
-    els.status.textContent =
-      "No se pudieron cargar los partidos. Revisá tu conexión e intentá de nuevo.";
+    if (!state.partidos.length) {
+      els.status.hidden = false;
+      els.status.textContent =
+        "No se pudieron cargar los partidos. Revisá tu conexión e intentá de nuevo.";
+    }
   }
 }
 
@@ -64,38 +92,103 @@ function ordenarPorFecha(partidos) {
 /* ---------- Render ---------- */
 
 function render() {
-  const partidos = aplicarFiltro(state.partidos, state.filtro);
+  els.status.hidden = true;
 
-  els.list.innerHTML = "";
+  const enVivo = state.partidos.filter((p) => p.estado === "en_vivo");
+  renderGrupo(els.liveList, enVivo);
+  els.liveSection.hidden = enVivo.length === 0;
 
-  if (partidos.length === 0) {
-    els.status.hidden = false;
-    els.status.textContent = "No hay partidos para mostrar en este filtro.";
+  // Clásicos vs Boca: solo los que todavía no se jugaron, nunca los anteriores
+  const clasicos = state.partidos.filter((p) => p.clasico && p.estado !== "finalizado");
+  renderGrupo(els.clasicoList, clasicos, { esClasico: true });
+  els.clasicoSection.hidden = clasicos.length === 0;
+
+  if (state.filtro === "favoritos") {
+    mostrarSolo("favoritos");
+    const favoritos = state.partidos.filter((p) => state.favoritos.includes(p.id));
+    renderGrupo(els.favoritosList, favoritos);
+    toggleVacio("favoritos", favoritos.length === 0);
     return;
   }
 
-  els.status.hidden = true;
+  mostrarSolo("categorias");
 
-  partidos.forEach((partido) => {
-    els.list.appendChild(crearTarjeta(partido));
+  const filtroEstado = state.filtro === "jugados" ? "finalizado" : null;
+
+  const liga = filtrarPorCategoriaYEstado("liga_argentina", filtroEstado, enVivo.length > 0);
+  const sudamerica = filtrarPorCategoriaYEstado("sudamericana", filtroEstado, enVivo.length > 0);
+
+  renderGrupo(els.ligaList, liga);
+  renderGrupo(els.sudamericaList, sudamerica);
+
+  toggleVacio("liga", liga.length === 0);
+  toggleVacio("sudamericana", sudamerica.length === 0);
+}
+
+function filtrarPorCategoriaYEstado(categoria, estadoExacto, hayEnVivo) {
+  return state.partidos.filter((p) => {
+    if (p.categoria !== categoria) return false;
+    if (p.estado === "en_vivo") return false; // ya se muestra arriba, en la sección "En vivo"
+    if (p.clasico && p.estado !== "finalizado") return false; // ya se muestra en "Próximo Clásico"
+    if (estadoExacto) return p.estado === estadoExacto;
+    return p.estado === "programado"; // vista "Próximos y en vivo" -> acá solo próximos
   });
 }
 
-function crearTarjeta(partido) {
-  const node = els.template.content.cloneNode(true);
-  const card = node.querySelector(".match-card");
+function mostrarSolo(modo) {
+  const categorias = modo === "categorias";
+  els.ligaSection.hidden = !categorias;
+  els.sudamericaSection.hidden = !categorias;
+  els.favoritosSection.hidden = categorias;
+}
 
+function toggleVacio(clave, esVacio) {
+  const msg = document.querySelector(`[data-empty-for="${clave}"]`);
+  if (msg) msg.hidden = !esVacio;
+}
+
+function renderGrupo(container, partidos, opciones) {
+  container.innerHTML = "";
+  partidos.forEach((partido) => container.appendChild(crearTarjeta(partido, opciones)));
+}
+
+function crearTarjeta(partido, opciones) {
+  const node = els.template.content.cloneNode(true);
+
+  const catInfo = CATEGORIAS[partido.categoria];
   node.querySelector(".competition").textContent =
-    `${partido.competicion}${partido.fecha_torneo ? " · " + partido.fecha_torneo : ""}`;
+    `${catInfo ? catInfo.icono + " " : ""}${partido.competicion}${partido.fecha_torneo ? " · " + partido.fecha_torneo : ""}`;
+
   node.querySelector(".home").textContent = partido.local;
   node.querySelector(".away").textContent = partido.visitante;
   node.querySelector(".date").textContent = formatearFecha(partido.fecha) || partido.fecha;
-  node.querySelector(".time").textContent = partido.hora ? `${partido.hora} hs (ARG)` : "A confirmar";
+  node.querySelector(".time").textContent = partido.hora && partido.hora !== "A confirmar" ? `${partido.hora} hs (ARG)` : "A confirmar";
   node.querySelector(".stadium").textContent = partido.estadio || "A confirmar";
 
+  const scoreEl = node.querySelector(".score");
+  if (partido.marcador) {
+    scoreEl.textContent = `${partido.marcador.local} - ${partido.marcador.visitante}`;
+  } else {
+    scoreEl.textContent = "vs";
+  }
+
+  const minutoEl = node.querySelector(".live-minute");
+  if (partido.estado === "en_vivo" && partido.minuto) {
+    minutoEl.textContent = `⏱️ ${partido.minuto}`;
+    minutoEl.hidden = false;
+  }
+
   const badge = node.querySelector(".status-badge");
-  badge.textContent = partido.estado === "finalizado" ? "Jugado" : "Programado";
-  badge.classList.add(partido.estado === "finalizado" ? "finalizado" : "programado");
+  if (partido.estado === "en_vivo") {
+    badge.textContent = "En vivo";
+    badge.classList.add("en-vivo");
+  } else if (partido.estado === "finalizado") {
+    badge.textContent = "Jugado";
+    badge.classList.add("finalizado");
+  } else {
+    badge.textContent = "Programado";
+    badge.classList.add("programado");
+  }
 
   renderTags(node.querySelector(".tv-tags"), partido.tv);
   renderTags(node.querySelector(".streaming-tags"), partido.streaming);
@@ -105,6 +198,10 @@ function crearTarjeta(partido) {
   favBtn.textContent = esFavorito ? "★" : "☆";
   favBtn.classList.toggle("active", esFavorito);
   favBtn.addEventListener("click", () => toggleFavorito(partido.id, favBtn));
+
+  const card = node.querySelector(".match-card");
+  if (partido.estado === "en_vivo") card.classList.add("card-en-vivo");
+  if (partido.clasico) card.classList.add("card-clasico");
 
   return node;
 }
@@ -132,19 +229,6 @@ function configurarFiltros() {
     state.filtro = btn.dataset.filter;
     render();
   });
-}
-
-function aplicarFiltro(partidos, filtro) {
-  switch (filtro) {
-    case "programado":
-      return partidos.filter((p) => p.estado === "programado");
-    case "finalizado":
-      return partidos.filter((p) => p.estado === "finalizado");
-    case "favoritos":
-      return partidos.filter((p) => state.favoritos.includes(p.id));
-    default:
-      return partidos;
-  }
 }
 
 /* ---------- Favoritos (persistencia con localStorage) ---------- */

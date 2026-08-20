@@ -80,6 +80,46 @@ body{
 
 main{padding:0 20px;max-width:900px;margin:0 auto;}
 
+.section-title{
+  font-size:1.05rem;
+  margin:22px 0 12px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.category-section:first-of-type .section-title{margin-top:6px;}
+
+.live-title{color:#ff4d4d;}
+
+.live-section{
+  background:rgba(196,30,58,.08);
+  border:1px solid rgba(196,30,58,.35);
+  border-radius:var(--radio);
+  padding:4px 12px 14px;
+  margin-bottom:8px;
+}
+
+.clasico-title{color:var(--amarillo);}
+
+.clasico-section{
+  background:linear-gradient(135deg,rgba(241,196,15,.08),rgba(196,30,58,.08));
+  border:1px solid rgba(241,196,15,.35);
+  border-radius:var(--radio);
+  padding:4px 12px 14px;
+  margin-bottom:8px;
+}
+
+.card-clasico{
+  border-color:var(--amarillo);
+  background:linear-gradient(180deg,rgba(241,196,15,.06),var(--card));
+}
+
+.empty-msg{
+  color:var(--texto-suave);
+  font-size:.85rem;
+  padding:6px 2px 18px;
+}
+
 .status{
   text-align:center;
   color:var(--texto-suave);
@@ -136,6 +176,21 @@ main{padding:0 20px;max-width:900px;margin:0 auto;}
 .team{font-weight:700;font-size:1.02rem;flex:1;}
 .team.away{text-align:right;}
 .vs{color:var(--texto-suave);font-size:.8rem;padding:0 6px;}
+.score{
+  font-weight:800;
+  font-size:1rem;
+  color:var(--texto);
+  min-width:44px;
+  text-align:center;
+}
+
+.live-minute{
+  text-align:center;
+  font-size:.78rem;
+  color:#ff8080;
+  font-weight:700;
+  margin:-6px 0 10px;
+}
 
 .details{
   display:grid;
@@ -181,6 +236,18 @@ main{padding:0 20px;max-width:900px;margin:0 auto;}
 }
 .status-badge.programado{background:rgba(46,204,113,.15);color:var(--verde);}
 .status-badge.finalizado{background:rgba(255,255,255,.1);color:var(--texto-suave);}
+.status-badge.en-vivo{
+  background:rgba(255,77,77,.18);
+  color:#ff4d4d;
+  animation:pulso 1.4s infinite;
+}
+
+.card-en-vivo{border-color:#ff4d4d;}
+
+@keyframes pulso{
+  0%,100%{opacity:1;}
+  50%{opacity:.55;}
+}
 
 .footer{
   text-align:center;

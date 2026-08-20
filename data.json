@@ -5,6 +5,7 @@
   "partidos": [
     {
       "id": "2026-08-16-ARG",
+      "categoria": "liga_argentina",
       "competicion": "Torneo Clausura 2026",
       "fecha_torneo": "Fecha 5 - Grupo B",
       "local": "River Plate",
@@ -14,10 +15,13 @@
       "estadio": "Estadio Más Monumental",
       "tv": ["ESPN Premium"],
       "streaming": ["Flow", "DGO", "Telecentro Play"],
-      "estado": "finalizado"
+      "estado": "finalizado",
+      "marcador": { "local": 1, "visitante": 1 },
+      "minuto": null
     },
     {
       "id": "2026-08-19-ISF",
+      "categoria": "sudamericana",
       "competicion": "Copa Sudamericana",
       "fecha_torneo": "Octavos de final - Ida",
       "local": "River Plate",
@@ -27,10 +31,13 @@
       "estadio": "Estadio Más Monumental",
       "tv": ["ESPN"],
       "streaming": ["Disney+", "DGO"],
-      "estado": "finalizado"
+      "estado": "finalizado",
+      "marcador": { "local": 2, "visitante": 0 },
+      "minuto": null
     },
     {
       "id": "2026-08-23-VEL",
+      "categoria": "liga_argentina",
       "competicion": "Torneo Clausura 2026",
       "fecha_torneo": "Fecha 6 (interzonal)",
       "local": "River Plate",
@@ -40,10 +47,13 @@
       "estadio": "Estadio Más Monumental",
       "tv": ["A confirmar"],
       "streaming": ["A confirmar"],
-      "estado": "programado"
+      "estado": "programado",
+      "marcador": null,
+      "minuto": null
     },
     {
       "id": "2026-08-30-BAN",
+      "categoria": "liga_argentina",
       "competicion": "Torneo Clausura 2026",
       "fecha_torneo": "Fecha 7",
       "local": "Banfield",
@@ -53,10 +63,13 @@
       "estadio": "Estadio Florencio Sola",
       "tv": ["A confirmar"],
       "streaming": ["A confirmar"],
-      "estado": "programado"
+      "estado": "programado",
+      "marcador": null,
+      "minuto": null
     },
     {
       "id": "2026-09-06-IRI",
+      "categoria": "liga_argentina",
       "competicion": "Torneo Clausura 2026",
       "fecha_torneo": "Fecha 8",
       "local": "River Plate",
@@ -66,10 +79,13 @@
       "estadio": "Estadio Más Monumental",
       "tv": ["A confirmar"],
       "streaming": ["A confirmar"],
-      "estado": "programado"
+      "estado": "programado",
+      "marcador": null,
+      "minuto": null
     },
     {
       "id": "2026-09-13-ATU",
+      "categoria": "liga_argentina",
       "competicion": "Torneo Clausura 2026",
       "fecha_torneo": "Fecha 9",
       "local": "Atlético Tucumán",
@@ -79,10 +95,30 @@
       "estadio": "Estadio Monumental José Fierro",
       "tv": ["A confirmar"],
       "streaming": ["A confirmar"],
-      "estado": "programado"
+      "estado": "programado",
+      "marcador": null,
+      "minuto": null
+    },
+    {
+      "id": "2026-CLAUSURA-F15-CLASICO",
+      "categoria": "liga_argentina",
+      "clasico": true,
+      "competicion": "Torneo Clausura 2026",
+      "fecha_torneo": "Fecha 15 - Superclásico",
+      "local": "Boca Juniors",
+      "visitante": "River Plate",
+      "fecha": "A confirmar",
+      "hora": "A confirmar",
+      "estadio": "La Bombonera",
+      "tv": ["A confirmar"],
+      "streaming": ["A confirmar"],
+      "estado": "programado",
+      "marcador": null,
+      "minuto": null
     },
     {
       "id": "2026-09-20-HUR",
+      "categoria": "liga_argentina",
       "competicion": "Torneo Clausura 2026",
       "fecha_torneo": "Fecha 10",
       "local": "River Plate",
@@ -92,7 +128,9 @@
       "estadio": "Estadio Más Monumental",
       "tv": ["A confirmar"],
       "streaming": ["A confirmar"],
-      "estado": "programado"
+      "estado": "programado",
+      "marcador": null,
+      "minuto": null
     }
   ]
 }

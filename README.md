@@ -39,6 +39,58 @@ No necesitás servidor, base de datos ni configurar nada: `index.html` lee direc
 
 Queda con su propio ícono, abre en ventana propia y funciona offline (con los últimos datos guardados en caché).
 
+## ⚔️ Clásicos vs Boca
+
+Hay una sección aparte, **"Próximo Clásico vs Boca"**, que muestra únicamente el Superclásico que todavía no se jugó (marcado con `"clasico": true` en `data.json`). Los clásicos ya jugados **no se muestran ahí** — pasan a verse como un partido normal dentro de "Jugados" en Liga Argentina, una vez que cambiás su `estado` a `"finalizado"`.
+
+Para agregar o actualizar el próximo clásico, en `data.json`:
+
+```json
+{
+  "id": "2026-CLAUSURA-F15-CLASICO",
+  "categoria": "liga_argentina",
+  "clasico": true,
+  "competicion": "Torneo Clausura 2026",
+  "fecha_torneo": "Fecha 15 - Superclásico",
+  "local": "Boca Juniors",
+  "visitante": "River Plate",
+  "fecha": "A confirmar",
+  "hora": "A confirmar",
+  "estadio": "La Bombonera",
+  "tv": ["A confirmar"],
+  "streaming": ["A confirmar"],
+  "estado": "programado",
+  "marcador": null,
+  "minuto": null
+}
+```
+
+Apenas la Liga Profesional confirme día y horario, actualizá `fecha`, `hora`, `tv` y `streaming`. Cuando se juegue, cambiá `estado` a `"finalizado"` y completá `marcador` — automáticamente deja de aparecer en la sección de Clásicos.
+
+## 🔴 Resultados en vivo y categorías
+
+La app ya no muestra un listado plano con "todos los partidos". Ahora se organiza así:
+
+- **🔴 En vivo:** aparece arriba de todo, solo cuando hay un partido en curso, con marcador y minuto.
+- **🇦🇷 Liga Argentina** y **🌎 Copa Sudamericana:** dos secciones separadas por competencia.
+- Chips de arriba (**Próximos y en vivo / Jugados / Favoritos**) filtran dentro de esas categorías, sin mezclar todo en una sola lista.
+
+La app vuelve a consultar `data.json` cada 30 segundos en segundo plano, así que si actualizás el marcador de un partido en vivo, se refleja solo, sin recargar la página.
+
+### Cómo marcar un partido como "en vivo" con marcador
+
+En `data.json`, cambiá el partido correspondiente:
+
+```json
+{
+  "estado": "en_vivo",
+  "marcador": { "local": 1, "visitante": 0 },
+  "minuto": "63'"
+}
+```
+
+Cuando termine, volvé a poner `"estado": "finalizado"` y dejá el `marcador` final.
+
 ## 🗃️ Cómo actualizar los partidos
 
 Todos los partidos están en **`data.json`**. Para agregar o modificar uno, edita este bloque:
@@ -46,6 +98,7 @@ Todos los partidos están en **`data.json`**. Para agregar o modificar uno, edit
 ```json
 {
   "id": "2026-08-30-BAN",
+  "categoria": "liga_argentina",
   "competicion": "Torneo Clausura 2026",
   "fecha_torneo": "Fecha 7",
   "local": "Banfield",
@@ -55,13 +108,18 @@ Todos los partidos están en **`data.json`**. Para agregar o modificar uno, edit
   "estadio": "Estadio Florencio Sola",
   "tv": ["ESPN Premium"],
   "streaming": ["Flow", "DGO"],
-  "estado": "programado"
+  "estado": "programado",
+  "marcador": null,
+  "minuto": null
 }
 ```
 
-- `estado`: `"programado"` o `"finalizado"`.
+- `categoria`: `"liga_argentina"` o `"sudamericana"` — define en qué sección aparece.
+- `estado`: `"programado"`, `"en_vivo"` o `"finalizado"`.
 - `fecha`: formato `YYYY-MM-DD`. Si aún no está confirmada, usar `"A confirmar"`.
 - `tv` / `streaming`: listas de texto, podés poner una o varias plataformas.
+- `marcador`: `null` o `{ "local": 0, "visitante": 0 }`.
+- `minuto`: texto libre como `"63'"`, solo se muestra si `estado` es `"en_vivo"`.
 
 Los cambios se ven apenas se sube el archivo, sin tocar el resto del código.
 
