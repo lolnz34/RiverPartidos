@@ -1,0 +1,98 @@
+{
+  "equipo": "River Plate",
+  "actualizado": "2026-08-20",
+  "fuente": "Recopilado de coberturas de TyC Sports, ESPN, La Nación y Liga Profesional de Fútbol",
+  "partidos": [
+    {
+      "id": "2026-08-16-ARG",
+      "competicion": "Torneo Clausura 2026",
+      "fecha_torneo": "Fecha 5 - Grupo B",
+      "local": "River Plate",
+      "visitante": "Argentinos Juniors",
+      "fecha": "2026-08-16",
+      "hora": "18:00",
+      "estadio": "Estadio Más Monumental",
+      "tv": ["ESPN Premium"],
+      "streaming": ["Flow", "DGO", "Telecentro Play"],
+      "estado": "finalizado"
+    },
+    {
+      "id": "2026-08-19-ISF",
+      "competicion": "Copa Sudamericana",
+      "fecha_torneo": "Octavos de final - Ida",
+      "local": "River Plate",
+      "visitante": "Independiente Santa Fe",
+      "fecha": "2026-08-19",
+      "hora": "21:30",
+      "estadio": "Estadio Más Monumental",
+      "tv": ["ESPN"],
+      "streaming": ["Disney+", "DGO"],
+      "estado": "finalizado"
+    },
+    {
+      "id": "2026-08-23-VEL",
+      "competicion": "Torneo Clausura 2026",
+      "fecha_torneo": "Fecha 6 (interzonal)",
+      "local": "River Plate",
+      "visitante": "Vélez Sarsfield",
+      "fecha": "2026-08-23",
+      "hora": "19:15",
+      "estadio": "Estadio Más Monumental",
+      "tv": ["A confirmar"],
+      "streaming": ["A confirmar"],
+      "estado": "programado"
+    },
+    {
+      "id": "2026-08-30-BAN",
+      "competicion": "Torneo Clausura 2026",
+      "fecha_torneo": "Fecha 7",
+      "local": "Banfield",
+      "visitante": "River Plate",
+      "fecha": "2026-08-30",
+      "hora": "A confirmar",
+      "estadio": "Estadio Florencio Sola",
+      "tv": ["A confirmar"],
+      "streaming": ["A confirmar"],
+      "estado": "programado"
+    },
+    {
+      "id": "2026-09-06-IRI",
+      "competicion": "Torneo Clausura 2026",
+      "fecha_torneo": "Fecha 8",
+      "local": "River Plate",
+      "visitante": "Independiente Rivadavia",
+      "fecha": "2026-09-06",
+      "hora": "A confirmar",
+      "estadio": "Estadio Más Monumental",
+      "tv": ["A confirmar"],
+      "streaming": ["A confirmar"],
+      "estado": "programado"
+    },
+    {
+      "id": "2026-09-13-ATU",
+      "competicion": "Torneo Clausura 2026",
+      "fecha_torneo": "Fecha 9",
+      "local": "Atlético Tucumán",
+      "visitante": "River Plate",
+      "fecha": "2026-09-13",
+      "hora": "A confirmar",
+      "estadio": "Estadio Monumental José Fierro",
+      "tv": ["A confirmar"],
+      "streaming": ["A confirmar"],
+      "estado": "programado"
+    },
+    {
+      "id": "2026-09-20-HUR",
+      "competicion": "Torneo Clausura 2026",
+      "fecha_torneo": "Fecha 10",
+      "local": "River Plate",
+      "visitante": "Huracán",
+      "fecha": "2026-09-20",
+      "hora": "A confirmar",
+      "estadio": "Estadio Más Monumental",
+      "tv": ["A confirmar"],
+      "streaming": ["A confirmar"],
+      "estado": "programado"
+    }
+  ]
+}
